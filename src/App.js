@@ -47,19 +47,19 @@ class Performance extends React.Component {
           <tr>
             <td>Weighted Profit Margin</td>
             <td>
-              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-01'].spend, 4) : ''}
+              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-01'].spend, 4, calculateProfitMargin(this.props.data['2020-01-01'].revenue, this.props.data['2020-01-01'].spend)) : ''}
             </td>
             <td>
-              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-02'].spend, 3) : ''}
+              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-02'].spend, 3, calculateProfitMargin(this.props.data['2020-01-02'].revenue, this.props.data['2020-01-02'].spend)) : ''}
             </td>
             <td>
-              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-03'].spend, 2) : ''}
+              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-03'].spend, 2, calculateProfitMargin(this.props.data['2020-01-03'].revenue, this.props.data['2020-01-03'].spend)) : ''}
             </td>
             <td>
-              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-04'].spend, 1) : ''}
+              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-04'].spend, 1, calculateProfitMargin(this.props.data['2020-01-04'].revenue, this.props.data['2020-01-04'].spend)) : ''}
             </td>
             <td>
-              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-05'].spend, 0) : ''}
+              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-05'].spend, 0, calculateProfitMargin(this.props.data['2020-01-05'].revenue, this.props.data['2020-01-05'].spend)) : ''}
             </td>
           </tr>
           <tr>
@@ -296,19 +296,20 @@ function calculateProfitMargin(revenue, spend) {
   return Math.round((num + Number.EPSILON) * 100) / 100;
 }
 
-function calculateWeightedProfitMargin(spend, days) {
+function calculateWeightedProfitMargin(spend, days, profit) {
   // spend * (Math.pow(0.5, days from most recent performance))
-  var num = spend * Math.pow(0.5, days);
+  var weight = spend * Math.pow(0.5, days);
+  var num = weight * profit;
   return Math.round((num + Number.EPSILON) * 100) / 100;
 }
 
 function recommendedBudget(data, budget) {
   var avgProfit = (
-    calculateWeightedProfitMargin(data['2020-01-01'].spend, 4) +
-    calculateWeightedProfitMargin(data['2020-01-02'].spend, 3) +
-    calculateWeightedProfitMargin(data['2020-01-03'].spend, 2) +
-    calculateWeightedProfitMargin(data['2020-01-04'].spend, 1) +
-    calculateWeightedProfitMargin(data['2020-01-05'].spend, 0)
+    calculateWeightedProfitMargin(data['2020-01-01'].spend, 4, calculateProfitMargin(data['2020-01-01'].revenue, data['2020-01-01'].spend)) +
+    calculateWeightedProfitMargin(data['2020-01-02'].spend, 3, calculateProfitMargin(data['2020-01-02'].revenue, data['2020-01-02'].spend)) +
+    calculateWeightedProfitMargin(data['2020-01-03'].spend, 2, calculateProfitMargin(data['2020-01-03'].revenue, data['2020-01-03'].spend)) +
+    calculateWeightedProfitMargin(data['2020-01-04'].spend, 1, calculateProfitMargin(data['2020-01-04'].revenue, data['2020-01-04'].spend)) +
+    calculateWeightedProfitMargin(data['2020-01-05'].spend, 0, calculateProfitMargin(data['2020-01-05'].revenue, data['2020-01-05'].spend))
   ) / 5;
   var num = (1 + avgProfit) * budget;
   return Math.round((num + Number.EPSILON) * 100) / 100;

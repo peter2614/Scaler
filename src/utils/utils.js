@@ -52,10 +52,10 @@ function getTotalWeightedRoAS(data) {
 
 // get weighted average of return on ad spend
 export function getWeightedAvg(data) {
-  return roundTwoDec(getTotalRoAS(data) / getTotalWeightedRoAS(data));
+  return roundTwoDec(getTotalRoAS(data) / getTotalWeightedRoAS(data)*100);
 }
 
 // round to two decimal
-function roundTwoDec(num) {
+export function roundTwoDec(num) {
   return Math.round((num + Number.EPSILON) * 100) / 100;
 }

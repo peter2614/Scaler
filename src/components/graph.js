@@ -15,7 +15,7 @@ function Graph(props) {
       fontSize: 25
     },
     axisY: {
-      title: "Return On Ad Apend",
+      title: "Return On Ad Spend",
       suffix: "%"
     },
     data: [{

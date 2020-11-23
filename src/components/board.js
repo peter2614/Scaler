@@ -37,7 +37,7 @@ class Board extends React.Component {
         var adBudget = await getAdBudget(id);
         var date = dates[i];
         obj[id] = {...obj[id],
-          budget: adBudget.budget,
+          budget: adBudget ? adBudget.budget : '',
           [date]: {
             spend: data[j].spend,
             revenue: data[j].revenue,

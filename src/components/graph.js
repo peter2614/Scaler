@@ -12,7 +12,7 @@ function Graph(props) {
     theme: "light2", // "light1", "dark1", "dark2"
     title:{
       text: "Return on Ad Spend (RoAS)",
-      fontSize: 28
+      fontSize: 25
     },
     axisY: {
       title: "Return On Ad Apend",

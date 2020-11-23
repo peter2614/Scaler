@@ -29,7 +29,7 @@ export function clickRate(impressions, clicks) {
 }
 
 // get total return on ad spend
-export function getTotalRoAS(data) {
+function getTotalRoAS(data) {
   return roundTwoDec(
     calculateProfitMargin(data['2020-01-01'].revenue, data['2020-01-01'].spend) +
     calculateProfitMargin(data['2020-01-02'].revenue, data['2020-01-02'].spend) +
@@ -40,7 +40,7 @@ export function getTotalRoAS(data) {
 }
 
 // get total weights of return on ad spend
-export function getTotalWeightedRoAS(data) {
+function getTotalWeightedRoAS(data) {
   return roundTwoDec(
     calculateWeightedProfitMargin(data['2020-01-01'].spend, 4) +
     calculateWeightedProfitMargin(data['2020-01-02'].spend, 3) +

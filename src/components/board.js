@@ -68,7 +68,7 @@ class Board extends React.Component {
             <Table className="board" bordered responsive>
               <thead>
                 <tr>
-                  <th colSpan="2">AD_ID: {Object.keys(val)}</th>
+                  <th colSpan="2" style={{fontSize: '22px'}}>AD_ID: {Object.keys(val)}</th>
                 </tr>
                 {/* <tr>
                   <th>Performance</th>

@@ -10,7 +10,7 @@ function App() {
     <div className="App">
       <Container>
         <Row style={{justifyContent: "center", paddingBottom: "20px"}}>
-          <h1>Scaler</h1>
+          <h1>Budget Scaler</h1>
         </Row>
         <Board />
       </Container>

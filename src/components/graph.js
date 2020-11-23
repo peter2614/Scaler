@@ -2,7 +2,7 @@ import { calculateProfitMargin } from './../utils/utils';
 
 // Canvas library
 import CanvasJSReact from './../lib/canvasjs.react';
-var CanvasJS = CanvasJSReact.CanvasJS;
+// var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 function Graph(props) {
@@ -11,11 +11,11 @@ function Graph(props) {
     exportEnabled: true,
     theme: "light2", // "light1", "dark1", "dark2"
     title:{
-      text: "Profit Margin",
-      fontSize: 30
+      text: "Return on Ad Spend (RoAS)",
+      fontSize: 28
     },
     axisY: {
-      title: "Profit Margin",
+      title: "Return On Ad Apend",
       suffix: "%"
     },
     data: [{

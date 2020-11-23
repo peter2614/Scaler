@@ -59,22 +59,21 @@ class Board extends React.Component {
     this.setState({
       data: newData
     })
-    console.log(this.state.data)
   }
 
   render() {
       return this.state.data.map((val, index) => 
         (
-          <Row>
+          <Row key={index}>
             <Table className="board" bordered responsive>
               <thead>
                 <tr>
-                  <th key={index} colSpan="2">AD_ID: {Object.keys(val)}</th>
+                  <th colSpan="2">AD_ID: {Object.keys(val)}</th>
                 </tr>
-                <tr>
+                {/* <tr>
                   <th>Performance</th>
                   <th>Graph</th>
-                </tr>
+                </tr> */}
               </thead>
               <tbody>
                 <tr>
@@ -96,7 +95,7 @@ async function getAdInsights(d, m) {
   try {
     var date = encodeURIComponent(d);
     var metrics = encodeURIComponent(m);
-    let res = await fetch('https://interview-api.sbly.com/ad-insights?' + `date=${date}&metrics=${metrics}`, { 
+    let res = await fetch(`https://interview-api.sbly.com/ad-insights?date=${date}&metrics=${metrics}`, { 
       method: 'get',
       headers: new Headers({
         'Authorization': 'SHAREABLY_SECRET_TOKEN'

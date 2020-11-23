@@ -1,5 +1,5 @@
 import Table from 'react-bootstrap/Table';
-import { calculateProfitMargin, calculateWeightedProfitMargin, clickRate, recommendedBudget } from './../utils/utils';
+import { calculateProfitMargin, calculateWeightedProfitMargin, clickRate, recommendedBudget, getTotalRoAS, getTotalWeightedRoAS, getWeightedAvg } from './../utils/utils';
 
 function Performance(props) {
   return (
@@ -12,11 +12,12 @@ function Performance(props) {
           <th>2020-01-03</th>
           <th>2020-01-04</th>
           <th>2020-01-05</th>
+          <th>Total</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Profit Margin</td>
+          <td>Return on Ad Spend</td>
           <td>
             {props.data ? calculateProfitMargin(props.data['2020-01-01'].revenue, props.data['2020-01-01'].spend) : ''}
           </td>
@@ -32,23 +33,29 @@ function Performance(props) {
           <td>
             {props.data ? calculateProfitMargin(props.data['2020-01-05'].revenue, props.data['2020-01-05'].spend) : ''}
           </td>
+          <td>
+            {props.data ? getTotalRoAS(props.data) : ''}
+          </td>
         </tr>
         <tr>
-          <td>Weighted Profit Margin</td>
+          <td>Weighted Return on Ad Spend</td>
           <td>
-            {props.data ? calculateWeightedProfitMargin(props.data['2020-01-01'].spend, 4, calculateProfitMargin(props.data['2020-01-01'].revenue, props.data['2020-01-01'].spend)) : ''}
+            {props.data ? calculateWeightedProfitMargin(props.data['2020-01-01'].spend, 4) : ''}
           </td>
           <td>
-            {props.data ? calculateWeightedProfitMargin(props.data['2020-01-02'].spend, 3, calculateProfitMargin(props.data['2020-01-02'].revenue, props.data['2020-01-02'].spend)) : ''}
+            {props.data ? calculateWeightedProfitMargin(props.data['2020-01-02'].spend, 3) : ''}
           </td>
           <td>
-            {props.data ? calculateWeightedProfitMargin(props.data['2020-01-03'].spend, 2, calculateProfitMargin(props.data['2020-01-03'].revenue, props.data['2020-01-03'].spend)) : ''}
+            {props.data ? calculateWeightedProfitMargin(props.data['2020-01-03'].spend, 2) : ''}
           </td>
           <td>
-            {props.data ? calculateWeightedProfitMargin(props.data['2020-01-04'].spend, 1, calculateProfitMargin(props.data['2020-01-04'].revenue, props.data['2020-01-04'].spend)) : ''}
+            {props.data ? calculateWeightedProfitMargin(props.data['2020-01-04'].spend, 1) : ''}
           </td>
           <td>
-            {props.data ? calculateWeightedProfitMargin(props.data['2020-01-05'].spend, 0, calculateProfitMargin(props.data['2020-01-05'].revenue, props.data['2020-01-05'].spend)) : ''}
+            {props.data ? calculateWeightedProfitMargin(props.data['2020-01-05'].spend, 0) : ''}
+          </td>
+          <td>
+            {props.data ? getTotalWeightedRoAS(props.data) : ''}
           </td>
         </tr>
         <tr>
@@ -67,6 +74,12 @@ function Performance(props) {
           </td>
           <td>
             {props.data ? clickRate(props.data['2020-01-05'].impressions, props.data['2020-01-05'].clicks) : ''}
+          </td>
+        </tr>
+        <tr>
+          <td>Weighted Avg. of RoAS</td>
+          <td colSpan="5">
+            {props.data ? getWeightedAvg(props.data) : ''}
           </td>
         </tr>
         <tr>

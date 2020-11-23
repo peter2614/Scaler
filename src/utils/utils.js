@@ -14,9 +14,16 @@ export function calculateWeightedProfitMargin(spend, days) {
 // compute the recommended budget
 export function recommendedBudget(data, budget) {
   var mostRecent = calculateProfitMargin(data['2020-01-05'].revenue, data['2020-01-05'].spend)
+  var n = (
+    calculateProfitMargin(data['2020-01-01'].revenue, data['2020-01-01'].spend) * calculateWeightedProfitMargin(data['2020-01-01'].spend, 4) +
+    calculateProfitMargin(data['2020-01-02'].revenue, data['2020-01-02'].spend) * calculateWeightedProfitMargin(data['2020-01-02'].spend, 3) +
+    calculateProfitMargin(data['2020-01-03'].revenue, data['2020-01-03'].spend) * calculateWeightedProfitMargin(data['2020-01-03'].spend, 2) +
+    calculateProfitMargin(data['2020-01-04'].revenue, data['2020-01-04'].spend) * calculateWeightedProfitMargin(data['2020-01-04'].spend, 1) + 
+    calculateProfitMargin(data['2020-01-05'].revenue, data['2020-01-05'].spend) * calculateWeightedProfitMargin(data['2020-01-05'].spend, 0)
+  );
+
   var totalWeights = getTotalWeightedRoAS(data);
-  var totalRoAS = getTotalRoAS(data);
-  var avgProfit = totalRoAS/totalWeights;
+  var avgProfit = n/totalWeights;
   var num = (1 + avgProfit) * budget;
   var roundedNumber = roundTwoDec(num);
   return (roundedNumber < 10 && mostRecent > 0) ? Math.max(roundedNumber, 10) : roundedNumber;

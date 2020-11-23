@@ -1,6 +1,11 @@
-#performance tbody td, #performance thead th {
+.board tbody td, .board thead th {
   vertical-align: middle;
   text-align: center;
+}
+
+.board {
+  margin-bottom: 50px;
+  background-color: #eee;
 }
 
 .App {

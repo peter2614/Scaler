@@ -27,44 +27,70 @@ class Performance extends React.Component {
         </thead>
         <tbody>
           <tr>
-            <td>Spend</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>Profit Margin</td>
+            <td>
+              {this.props.data ? calculateProfitMargin(this.props.data['2020-01-01'].revenue, this.props.data['2020-01-01'].spend) : ''}
+            </td>
+            <td>
+              {this.props.data ? calculateProfitMargin(this.props.data['2020-01-02'].revenue, this.props.data['2020-01-02'].spend) : ''}
+            </td>
+            <td>
+              {this.props.data ? calculateProfitMargin(this.props.data['2020-01-03'].revenue, this.props.data['2020-01-03'].spend) : ''}
+            </td>
+            <td>
+              {this.props.data ? calculateProfitMargin(this.props.data['2020-01-04'].revenue, this.props.data['2020-01-04'].spend) : ''}
+            </td>
+            <td>
+              {this.props.data ? calculateProfitMargin(this.props.data['2020-01-05'].revenue, this.props.data['2020-01-05'].spend) : ''}
+            </td>
           </tr>
           <tr>
-            <td>Revenue</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>Weighted Profit Margin</td>
+            <td>
+              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-01'].spend, 4) : ''}
+            </td>
+            <td>
+              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-02'].spend, 3) : ''}
+            </td>
+            <td>
+              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-03'].spend, 2) : ''}
+            </td>
+            <td>
+              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-04'].spend, 1) : ''}
+            </td>
+            <td>
+              {this.props.data ? calculateWeightedProfitMargin(this.props.data['2020-01-05'].spend, 0) : ''}
+            </td>
           </tr>
           <tr>
-            <td>Impressions</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>Click Rate</td>
+            <td>
+              {this.props.data ? clickRate(this.props.data['2020-01-01'].impressions, this.props.data['2020-01-01'].clicks) : ''}
+            </td>
+            <td>
+              {this.props.data ? clickRate(this.props.data['2020-01-02'].impressions, this.props.data['2020-01-02'].clicks) : ''}
+            </td>
+            <td>
+              {this.props.data ? clickRate(this.props.data['2020-01-03'].impressions, this.props.data['2020-01-03'].clicks) : ''}
+            </td>
+            <td>
+              {this.props.data ? clickRate(this.props.data['2020-01-04'].impressions, this.props.data['2020-01-04'].clicks) : ''}
+            </td>
+            <td>
+              {this.props.data ? clickRate(this.props.data['2020-01-05'].impressions, this.props.data['2020-01-05'].clicks) : ''}
+            </td>
           </tr>
           <tr>
-            <td>Clicks</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>Current Budget</td>
+            <td colSpan="5">
+              {this.props.data ? this.props.data.budget : ''}
+            </td>
           </tr>
           <tr>
-            <td>Budget</td>
-            <td colSpan="5">$10</td>
-          </tr>
-          <tr>
-            <td>New Budget</td>
-            <td colSpan="5">$10</td>
+            <td>Proposed Budget</td>
+            <td colSpan="5">
+              {this.props.data ? recommendedBudget(this.props.data, this.props.data.budget) : ''}
+            </td>
           </tr>
         </tbody>
       </Table>
@@ -136,69 +162,98 @@ class Board extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [{
+      data: [
         /*
-          AD_ID,
-          spend,
-          revenue,
-          impressions,
-          clicks,
-          budget,
-          new_budget
+          id: {
+            budget: 10,
+            2020-01-01: { ... },
+            2020-01-02: { ... },
+            2020-01-03: { ... },
+            2020-01-04: { ... },
+            2020-01-05: { ... },
+          },
+          id2: { ... }
         */
-      }]
+      ]
     };
   }
 
   async componentDidMount() {
-    let data = await getAdInsights('2020-01-02', 'spend');
-    for(let i=0; i<data.length; i++) {
-      var id = data[i].id;
-      var adBudget = await getAdBudget(id);
-      var dict = {
-        id: {
+    const dates = ['2020-01-01', '2020-01-02', '2020-01-03', '2020-01-04', '2020-01-05'];
+    var newData = [];
+    var obj = {};
 
-        }
+    for(let i=0; i<dates.length; i++) {
+      let data = await getAdInsights(dates[i], 'spend,revenue,impressions,clicks');
+      
+      for(let j=0; j<data.length; j++) {
+        var id = data[j].id;
+        var adBudget = await getAdBudget(id);
+        var date = dates[i];
+        // var dateObj = {};
+        obj[id] = {...obj[id],
+          budget: adBudget.budget,
+          [date]: {
+            spend: data[j].spend,
+            revenue: data[j].revenue,
+            impressions: data[j].impressions,
+            clicks: data[j].clicks
+          }
+        };
+      }
+
+    }
+    for(var key in obj) {
+      var temp = {};
+      if(obj.hasOwnProperty(key)) {
+        temp[key] = obj[key];
+        newData.push(temp);
       }
     }
+
     this.setState({
-      data: data
+      data: newData
     })
+    console.log(this.state.data)
   }
 
   render() {
-    return (
-      <Container>
-        <Row style={{justifyContent: "center", paddingBottom: "20px"}}>
-          <h1>Scaler</h1>
-        </Row>
-        <Row>
-          <Table id="performance" bordered responsive>
-            <thead>
-              <tr>
-                <th>AD_ID</th>
-                <th>Performance</th>
-                <th>Graph</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style={{ maxWidth: "100px", minWidth: "60px" }}>ID</td>
-                <td style={{ maxWidth: "500px", minWidth: "300px" }}><Performance /></td>
-                <td style={{ minWidth: "500px" }}><Graph /></td>
-              </tr>
-            </tbody>
-          </Table>
+      return this.state.data.map((val, index) => 
+        (
+          <Row>
+            <Table className="board" bordered responsive>
+              <thead>
+                <tr>
+                  <th key={index} colSpan="2">AD_ID: {Object.keys(val)}</th>
+                </tr>
+                <tr>
+                  <th>Performance</th>
+                  <th>Graph</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style={{ maxWidth: "500px" }}><Performance data={val[Object.keys(val)[0]]}/></td>
+                  <td style={{ minWidth: "500px" }}><Graph data={val}/></td>
+                </tr>
+              </tbody>
+            </Table>
           </Row>
-      </Container>
-    )
+        )
+      )
+    
   }
 }
 
 function App() {
   return (
     <div className="App">
-      <Board />
+      <Container>
+        <Row style={{justifyContent: "center", paddingBottom: "20px"}}>
+          <h1>Scaler</h1>
+        </Row>
+        <Board />
+      </Container>
     </div>
   );
 }
@@ -216,7 +271,6 @@ async function getAdInsights(d, m) {
       })
     });
     let data = await res.json();
-    console.log(data);
     return data;
   }
   catch(err) {console.log(err);}
@@ -235,4 +289,32 @@ async function getAdBudget(id) {
     return data;
   }
   catch(err) {console.log(err);}
+}
+
+function calculateProfitMargin(revenue, spend) {
+  var num = (revenue-spend)/revenue;
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+}
+
+function calculateWeightedProfitMargin(spend, days) {
+  // spend * (Math.pow(0.5, days from most recent performance))
+  var num = spend * Math.pow(0.5, days);
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+}
+
+function recommendedBudget(data, budget) {
+  var avgProfit = (
+    calculateWeightedProfitMargin(data['2020-01-01'].spend, 4) +
+    calculateWeightedProfitMargin(data['2020-01-02'].spend, 3) +
+    calculateWeightedProfitMargin(data['2020-01-03'].spend, 2) +
+    calculateWeightedProfitMargin(data['2020-01-04'].spend, 1) +
+    calculateWeightedProfitMargin(data['2020-01-05'].spend, 0)
+  ) / 5;
+  var num = (1 + avgProfit) * budget;
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+}
+
+function clickRate(impressions, clicks) {
+  var num = clicks/impressions*100;
+  return Math.round((num + Number.EPSILON) * 100) / 100 + "%";
 }

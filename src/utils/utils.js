@@ -52,7 +52,14 @@ function getTotalWeightedRoAS(data) {
 
 // get weighted average of return on ad spend
 export function getWeightedAvg(data) {
-  return roundTwoDec(getTotalRoAS(data) / getTotalWeightedRoAS(data)*100);
+  var num = (
+    calculateProfitMargin(data['2020-01-01'].revenue, data['2020-01-01'].spend) * calculateWeightedProfitMargin(data['2020-01-01'].spend, 4) +
+    calculateProfitMargin(data['2020-01-02'].revenue, data['2020-01-02'].spend) * calculateWeightedProfitMargin(data['2020-01-02'].spend, 3) +
+    calculateProfitMargin(data['2020-01-03'].revenue, data['2020-01-03'].spend) * calculateWeightedProfitMargin(data['2020-01-03'].spend, 2) +
+    calculateProfitMargin(data['2020-01-04'].revenue, data['2020-01-04'].spend) * calculateWeightedProfitMargin(data['2020-01-04'].spend, 1) + 
+    calculateProfitMargin(data['2020-01-05'].revenue, data['2020-01-05'].spend) * calculateWeightedProfitMargin(data['2020-01-05'].spend, 0)
+  );
+  return roundTwoDec(num / getTotalWeightedRoAS(data)*100);
 }
 
 // round to two decimal

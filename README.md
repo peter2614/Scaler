@@ -1,6 +1,8 @@
 ## Live Demo: http://peter-scaler.herokuapp.com/
 <br/>
 
+## Design a budget scaler that is capable of scaling up the spend on profitable ads and scaling down the spend on unprofitable ads
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
